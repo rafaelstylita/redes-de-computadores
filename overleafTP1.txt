@@ -1,0 +1,294 @@
+\documentclass[12pt]{article}
+\usepackage{setspace}
+\usepackage{geometry}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+
+\geometry{a4paper, margin=2.5cm}
+\setlength{\parindent}{1.25cm}
+\onehalfspacing
+
+\begin{document}
+
+% ---------------------------------------------------------
+% CAPA
+% ---------------------------------------------------------
+\begin{titlepage}
+    \centering
+    \large Universidade Federal de Ouro Preto\\Campus Morro Do Cruzeiro – Ouro Preto\\ 
+    Bacharelado em Ciência da Computação\\[3cm]
+
+    \Large \textbf{Sistema de Gerenciamento de Eventos Olímpicos}\\BCC221 - Programação Orientada a Objetos\\[3cm]
+
+    \large
+    Autores:\\Rafael Stylita Duarte - 22.1.4021\\ Tiago Gomes da Silva - 19.2.4009}\\
+    Professor:\\Guillermo Camara Chavez\\[4cm]
+
+    \vfill
+    Ouro Preto\\
+    09/12/2025
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% ---------------------------------------------------------
+% 1. INTRODUÇÃO
+% ---------------------------------------------------------
+\section{Introdução}
+
+O desenvolvimento de sistemas orientados a objetos é fundamental para a construção de aplicações modulares, extensíveis e de fácil manutenção. Este trabalho apresenta a implementação de um Sistema de Gerenciamento de Eventos Olímpicos, utilizando a linguagem C++ e aplicando os principais conceitos de Programação Orientada a Objetos (POO).
+
+O sistema permite o cadastro e gerenciamento de entidades como países, atletas, treinadores, modalidades e medalhas, bem como a associação entre elas por meio de relações de composição e agregação. Além disso, oferece persistência de dados em arquivos CSV, possibilitando que as informações sejam recuperadas a cada execução.
+
+A proposta integra conceitos como herança, polimorfismo, encapsulamento, uso de vetores da STL, leitura e gravação de arquivos e organização modular em cabeçalhos e implementações. A construção do sistema visa reproduzir, em pequena escala, a lógica de gerenciamento utilizada em eventos esportivos reais, como os Jogos Olímpicos, consolidando assim o aprendizado teórico por meio de prática aplicada.
+
+\subsection{Objetivo Geral}
+
+Desenvolver um sistema em C++ capaz de gerenciar informações relacionadas a eventos olímpicos, aplicando princípios de Programação Orientada a Objetos (POO) e garantindo organização modular, persistência de dados e relação entre múltiplas entidades do domínio esportivo.
+
+\subsection{Objetivos Específicos}
+
+\begin{itemize}
+    \item Implementar classes que representem as principais entidades do sistema, como País, Pessoa, Atleta, Treinador, Modalidade e Medalha.
+    \item Aplicar conceitos de herança para especializar a classe base \textit{Pessoa} em \textit{Atleta} e \textit{Treinador}.
+    \item Criar associações entre entidades, como atletas vinculados a países, treinadores associados a atletas e medalhas relacionadas a modalidades.
+    \item Garantir a persistência dos dados por meio de arquivos CSV, permitindo que todas as entidades e relacionamentos sejam carregados ao iniciar o programa.
+    \item Construir um menu interativo que possibilite ao usuário cadastrar, consultar e vincular informações.
+    \item Utilizar vetores da STL para armazenar e manipular dinamicamente as coleções de objetos.
+    \item Organizar o projeto em múltiplos arquivos \texttt{.hpp} e \texttt{.cpp}, reforçando a modularidade e facilitando a manutenção do código.
+\end{itemize}
+
+\subsection{Justificativa}
+
+O desenvolvimento deste projeto justifica-se pela necessidade de aplicar na prática os principais fundamentos de POO, permitindo-nos vivenciar a criação de um sistema real, estruturado e modular. O contexto dos eventos olímpicos foi escolhido por envolver diversas entidades inter-relacionadas, oferecendo um cenário ideal para exercitar conceitos como herança, agregação, composição, polimorfismo e persistência de dados. Além disso, o uso de C++ proporciona um ambiente robusto e amplamente utilizado para sistemas de alto desempenho, contribuindo para a formação prática e acadêmica na área de desenvolvimento de software.
+
+
+% ---------------------------------------------------------
+% 2. Desenvolvimento
+% ---------------------------------------------------------
+\section{Desenvolvimento}
+
+\subsection{Especificação de Requisitos}
+
+O sistema desenvolvido tem como propósito gerenciar dados relacionados a eventos olímpicos, permitindo o cadastro, consulta e associação de diversas entidades. A seguir, apresentam-se os requisitos funcionais e não funcionais identificados.
+
+\subsubsection*{Requisitos Funcionais}
+
+\begin{itemize}
+    \item RF01 – Permitir o cadastro de países.
+    \item RF02 – Permitir o cadastro de atletas e treinadores.
+    \item RF03 – Associar atletas a países.
+    \item RF04 – Associar treinadores aos atletas que orientam.
+    \item RF05 – Cadastrar modalidades esportivas.
+    \item RF06 – Registrar medalhas e vincular cada medalha a uma modalidade.
+    \item RF07 – Premiar atletas com medalhas, atualizando automaticamente o país do atleta.
+    \item RF08 – Listar atletas de determinada modalidade.
+    \item RF09 – Exibir quadro geral de medalhas por país.
+    \item RF10 – Salvar todos os dados em arquivos CSV ao encerrar o sistema.
+    \item RF11 – Carregar automaticamente os dados salvos ao iniciar o programa.
+\end{itemize}
+
+\subsubsection*{Requisitos Não Funcionais}
+
+\begin{itemize}
+    \item RNF01 – O sistema deve ser implementado em linguagem C++.
+    \item RNF02 – O código deve ser modularizado, utilizando arquivos \texttt{.hpp} e \texttt{.cpp}.
+    \item RNF03 – Deve-se utilizar conceitos fundamentais de POO, como herança, polimorfismo, encapsulamento e agregação.
+    \item RNF04 – Os dados devem ser armazenados e recuperados em arquivos CSV, garantindo persistência entre execuções.
+    \item RNF05 – A interface deve ser baseada em menu de console simples e intuitivo.
+\end{itemize}
+
+\subsection{Diagrama de Classes}
+
+A modelagem das classes segue os princípios da Programação Orientada a Objetos aplicados ao domínio dos eventos olímpicos. O diagrama de classes representa as classes principais (\textit{Pais}, \textit{Pessoa}, \textit{Atleta}, \textit{Treinador}, \textit{Modalidade} e \textit{Medalha}) e seus relacionamentos, destacando:
+
+\begin{itemize}
+    \item \textbf{Herança}: \textit{Atleta} e \textit{Treinador} herdam de \textit{Pessoa}.
+    \item \textbf{Associação}: 
+        \begin{itemize}
+            \item País possui vários atletas e várias medalhas.
+            \item Atletas possuem múltiplas modalidades e medalhas.
+            \item Treinadores possuem vários atletas associados.
+        \end{itemize}
+    \item \textbf{Agregação/Composição}: as relações entre países, atletas, modalidades e medalhas refletem dependências estruturais importantes para o sistema.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{diagrama POO.png}
+\caption{Diagrama de Classes}
+\end{figure}
+
+
+O diagrama fornece uma visão clara da arquitetura orientada a objetos, facilitando a compreensão das responsabilidades de cada classe e da comunicação entre elas.
+
+\subsection{Diagrama de Entidade-Relacionamento}
+
+Embora o sistema utilize arquivos CSV em vez de um banco de dados relacional, é possível representar a estrutura lógica de dados por meio de um Diagrama ER simplificado. Este diagrama evidencia as entidades principais (País, Pessoa, Modalidade, Medalha) e seus relacionamentos, funcionando como apoio visual para compreender como os dados persistidos se conectam.
+
+O diagrama destaca:
+
+\begin{itemize}
+    \item Cada \textbf{Pessoa} possui um único \textbf{País}.
+    \item Um \textbf{Atleta} pode participar de várias \textbf{Modalidades}.
+    \item Um \textbf{Atleta} pode receber várias \textbf{Medalhas}.
+    \item Um \textbf{País} pode acumular várias \textbf{Medalhas}.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Captura de tela 2025-12-09 211726.png}
+    \caption{Diagrama Entidade-Relacionamento (DER) do sistema}
+    \label{fig:der}
+\end{figure}
+
+Mesmo sem uso direto de banco relacional, este ER auxilia na visualização da estrutura lógica da aplicação.
+
+
+% ---------------------------------------------------------
+% 3. DECISÕES DE PROJETO
+% ---------------------------------------------------------
+\section{Decisões de Projeto}
+
+Durante o desenvolvimento do Sistema de Gerenciamento de Eventos Olímpicos, algumas decisões estruturais foram fundamentais para garantir organização, legibilidade e escalabilidade do código. Esta seção apresenta as principais escolhas de modelagem e os motivos que levaram à adoção de cada solução.
+
+\subsection*{Herança e Reutilização de Código}
+
+A classe \texttt{Pessoa} foi definida como classe base para \texttt{Atleta} e \texttt{Treinador}. Essa decisão evita duplicação de atributos (nome, gênero, ano de nascimento e país) e permite o uso de polimorfismo em métodos como \texttt{exibirDados()}, que pode ser sobrescrito conforme necessário pelas classes derivadas.
+
+\subsection*{Associações e Relacionamentos}
+
+A relação entre entidades foi definida da seguinte forma:
+
+\begin{itemize}
+    \item \textbf{Pais} agrega múltiplos \textbf{Atletas} e \textbf{Medalhas}.
+    \item \textbf{Atleta} possui múltiplas \textbf{Modalidades} e \textbf{Medalhas}.
+    \item \textbf{Treinador} mantém uma lista de \textbf{Atletas} sob sua orientação.
+\end{itemize}
+
+Essas associações refletem o domínio real do problema e permitem que as entidades sejam manipuladas dinamicamente sem necessidade de um banco de dados relacional.
+
+\subsection*{Persistência em Arquivos CSV}
+
+Os dados são armazenados em arquivos CSV simples, garantindo portabilidade, facilidade de leitura e independência de bibliotecas externas. O \texttt{main.cpp} realiza dois processos fundamentais:
+
+\begin{enumerate}
+    \item \textbf{Carregamento inicial}: lê todos os CSV, instancia os objetos e reconstrói os relacionamentos.
+    \item \textbf{Salvamento final}: escreve novamente todos os dados antes de encerrar a execução.
+\end{enumerate}
+
+Essa abordagem foi escolhida por ser simples, transparente e suficiente para os requisitos do trabalho.
+
+\subsection*{Uso da STL e Gerenciamento de Coleções}
+
+A escolha pelo uso de \texttt{std::vector} como estrutura principal deve-se à sua eficiência, simplicidade e compatibilidade com o paradigma de orientação a objetos. Os vetores permitem inserções dinâmicas, percursos rápidos e integração direta com objetos armazenados em memória.
+
+\subsection*{Modularização e Organização em Arquivos}
+
+Todas as classes foram separadas em arquivos \texttt{.hpp} e \texttt{.cpp}, permitindo:
+
+\begin{itemize}
+    \item melhor legibilidade;
+    \item fácil manutenção e expansão;
+    \item dependências claras entre módulos.
+\end{itemize}
+
+Essa prática segue boas recomendações de engenharia de software e facilita a depuração e evolução futura do projeto.
+
+
+% ---------------------------------------------------------
+% 4. ARQUITETURA DO PROJETO
+% ---------------------------------------------------------
+\section{Arquitetura do Projeto}
+
+O projeto foi estruturado de forma modular, distribuindo classes, implementações e arquivos de dados em diretórios específicos. A organização foi pensada para facilitar a manutenção, leitura do código e escalabilidade.
+
+\subsection*{Estrutura de Diretórios}
+
+\begin{itemize}
+    \item \texttt{src/headers/} \\
+    Contém todos os arquivos \texttt{.hpp} responsáveis pela declaração das classes. Inclui:
+    \begin{itemize}
+        \item \texttt{pais.hpp} – Declaração da classe \texttt{Pais}.
+        \item \texttt{pessoa.hpp} – Classe base abstrata para \texttt{Atleta} e \texttt{Treinador}.
+        \item \texttt{atleta.hpp} – Classe derivada contendo modalidades e medalhas.
+        \item \texttt{treinador.hpp} – Classe derivada contendo lista de atletas treinados.
+        \item \texttt{modalidade.hpp} – Representa uma modalidade esportiva.
+        \item \texttt{medalha.hpp} – Representa medalhas associadas a modalidades e atletas.
+    \end{itemize}
+
+    \item \texttt{src/} \\
+    Contém os arquivos \texttt{.cpp} com as implementações das classes e o arquivo principal:
+    \begin{itemize}
+        \item \texttt{main.cpp} – Pontos principais:
+        \begin{itemize}
+            \item carregamento de dados;
+            \item reconstrução das associações entre as entidades;
+            \item menu interativo do sistema;
+            \item funções de cadastro e premiação;
+            \item persistência final em CSV.
+        \end{itemize}
+    \end{itemize}
+
+    \item \texttt{data/} \\
+    Armazena os dados persistidos em formato CSV:
+    \begin{itemize}
+        \item \texttt{paises.csv}
+        \item \texttt{modalidades.csv}
+        \item \texttt{pessoas.csv}
+        \item \texttt{medalhas.csv}
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Referência às Figuras}
+
+A Figura 1 apresenta o diagrama de classes utilizado como base da modelagem.  
+Já a Figura 2 representa o Diagrama Entidade-Relacionamento, responsável por ilustrar a estrutura lógica de dados.
+
+Essa organização torna o projeto facilmente expansível, permitindo adicionar novas entidades ou funcionalidades com alterações mínimas na arquitetura geral.
+
+
+% ---------------------------------------------------------
+% 5. TESTES
+% ---------------------------------------------------------
+\section{Testes Realizados}
+
+Para validar o funcionamento do sistema, foram executados testes manuais abrangendo todas as funcionalidades principais. Os testes contemplaram:
+
+\begin{itemize}
+    \item Cadastro de países, verificando bloqueio de códigos duplicados.
+    \item Cadastro de atletas e associação correta ao país selecionado.
+    \item Criação de modalidades e criação de medalhas vinculadas à modalidade escolhida.
+    \item Premiação de atletas, garantindo que:
+    \begin{itemize}
+        \item a medalha fosse adicionada ao atleta,
+        \item o país recebesse automaticamente a medalha,
+        \item a modalidade fosse adicionada ao atleta caso ainda não estivesse associada.
+    \end{itemize}
+    \item Associação manual de atletas a modalidades, com prevenção contra duplicidade.
+    \item Listagem de atletas por modalidade.
+    \item Salvamento e recarga de todos os dados via CSV, validando persistência contínua.
+\end{itemize}
+
+Os testes demonstraram que o sistema se comporta conforme esperado em cenários típicos de uso. As funcionalidades essenciais foram executadas corretamente e os dados foram mantidos de forma consistente entre diferentes execuções, garantindo a confiabilidade do sistema.
+
+
+% ---------------------------------------------------------
+% 6. CONCLUSÃO
+% ---------------------------------------------------------
+\section{Conclusão}
+
+O desenvolvimento do Sistema de Gerenciamento de Eventos Olímpicos permitiu aplicar de maneira prática os principais conceitos de Programação Orientada a Objetos estudados ao longo da disciplina. A construção das classes, suas relações e os mecanismos de herança, agregação e composição possibilitaram estruturar um sistema modular, coeso e de fácil manutenção.
+
+Além disso, a implementação da persistência em arquivos CSV mostrou-se essencial para tornar o sistema funcional entre diferentes execuções, aproximando o projeto de aplicações reais que exigem armazenamento e recuperação de dados. O uso de vetores da STL, sobrecarga de operadores, polimorfismo e organização em módulos reforçou uma prática de programação mais robusta e alinhada a padrões profissionais.
+
+A modelagem representada pelos diagramas de classes e de entidade-relacionamento contribuiu para uma visão clara da estrutura do sistema, servindo como base para o planejamento e a verificação da arquitetura implementada.
+
+De forma geral, o projeto cumpriu os objetivos propostos ao demonstrar o uso correto dos conceitos fundamentais de POO em C++, fornecendo uma solução funcional e extensível para o gerenciamento de informações relacionadas a atletas, países, modalidades e medalhas em eventos esportivos. O aprendizado adquirido nesse processo fortalece a capacidade de projetar e implementar sistemas orientados a objetos mais complexos no futuro.
+
+
+\end{document}
